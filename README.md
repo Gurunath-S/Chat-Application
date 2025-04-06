@@ -6,11 +6,6 @@
 
 ### https://chatifynew.vercel.app/
 
-<div align="center">
-  <img alt="Demo" src="./Assets/chatify.png" />
-</div>
-
-</div>
 
 ## Build With
 
