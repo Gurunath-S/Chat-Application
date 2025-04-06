@@ -1,6 +1,6 @@
 <div align="center">
 
-# Chatify
+# ChatApplication
 
 ### Personal Chat Room or Workspace to share resources and hangout with friends.
 
