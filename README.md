@@ -4,8 +4,6 @@
 
 ### Personal Chat Room or Workspace to share resources and hangout with friends.
 
-### https://chatifynew.vercel.app/
-
 
 ## Build With
 
