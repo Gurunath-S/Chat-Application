@@ -40,20 +40,33 @@ function Rooms() {
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const history = useHistory();
   const [alert, setAlert] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
-      useEffect(() => {
-        db.collection("channels")
-          .orderBy("channelName", "asc")
-          .onSnapshot((snapshot) => {
-            setChannelList(
-              snapshot.docs.map((channel) => ({
-                channelName: channel.data().channelName,
-                id: channel.id,
-                createdBy: channel.data().createdBy, // 🔥 Add this line
-              }))
-            );
-          });
-      }, []);
+    // ✅ 1. Get user from localStorage on mount
+    useEffect(() => {
+      const storedUser = JSON.parse(localStorage.getItem("userDetails"));
+      if (storedUser) {
+        setCurrentUser(storedUser);
+      }
+    }, []);
+
+    // ✅ 2. Load channel list from Firestore
+    useEffect(() => {
+      const unsubscribe = db
+        .collection("channels")
+        .orderBy("channelName", "asc")
+        .onSnapshot((snapshot) => {
+          setChannelList(
+            snapshot.docs.map((channel) => ({
+              channelName: channel.data().channelName,
+              id: channel.id,
+              createdBy: channel.data().createdBy,
+            }))
+          );
+        });
+
+      return () => unsubscribe();
+    }, []);
 
 
   const handleClick = () => {
@@ -113,7 +126,7 @@ function Rooms() {
       .catch((err) => console.error("Error deleting channel:", err));
   }
 };
-
+if (!currentUser) return null;
 
   return (
     <div>
@@ -158,8 +171,8 @@ function Rooms() {
         <Collapse in={open} timeout="auto">
           <List component="div" disablePadding>
             {channelList.map((channel) => {
-                  const userData = JSON.parse(localStorage.getItem("userDetails"));
-                  const isOwner = channel.createdBy === userData?.uid;
+                  
+                  const isOwner = currentUser?.uid === channel.createdBy;
 
                   return (
                     <ListItem key={channel.id} className={classes.nested}>
@@ -206,4 +219,4 @@ function Rooms() {
   );
 }
 
-export default Rooms ;
+export default Rooms;
