@@ -18,6 +18,7 @@ import CreateRoom from "./CreateRoom";
 import Fade from "@material-ui/core/Fade";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -40,18 +41,20 @@ function Rooms() {
   const history = useHistory();
   const [alert, setAlert] = useState(false);
 
-  useEffect(() => {
-    db.collection("channels")
-      .orderBy("channelName", "asc")
-      .onSnapshot((snapshot) => {
-        setChannelList(
-          snapshot.docs.map((channel) => ({
-            channelName: channel.data().channelName,
-            id: channel.id,
-          }))
-        );
-      });
-  }, []);
+      useEffect(() => {
+        db.collection("channels")
+          .orderBy("channelName", "asc")
+          .onSnapshot((snapshot) => {
+            setChannelList(
+              snapshot.docs.map((channel) => ({
+                channelName: channel.data().channelName,
+                id: channel.id,
+                createdBy: channel.data().createdBy, // 🔥 Add this line
+              }))
+            );
+          });
+      }, []);
+
 
   const handleClick = () => {
     setOpen(!open);
@@ -84,16 +87,33 @@ function Rooms() {
         }
       }
 
-      db.collection("channels")
-        .add({ channelName: cName.toLowerCase() })
-        .then((res) => {
-          console.log("added new channel");
+      const userData = JSON.parse(localStorage.getItem("userDetails"));
+        db.collection("channels")
+          .add({
+            channelName: cName.toLowerCase(),
+            createdBy: userData?.uid,
+          })
+        .then(() => {
+          console.log("✅ Channel added:", cName);
         })
-        .then((err) => {
-          console.log(err);
+        .catch((err) => {
+          console.error("❌ Failed to add channel:", err);
         });
+
     }
   };
+  const handleDeleteRoom = (roomId) => {
+  if (window.confirm("Are you sure you want to delete this channel?")) {
+    db.collection("channels")
+      .doc(roomId)
+      .delete()
+      .then(() => {
+        console.log("Channel deleted!");
+      })
+      .catch((err) => console.error("Error deleting channel:", err));
+  }
+};
+
 
   return (
     <div>
@@ -137,29 +157,48 @@ function Rooms() {
 
         <Collapse in={open} timeout="auto">
           <List component="div" disablePadding>
-            {channelList.map((channel) => (
-              <ListItem
-                key={channel.id}
-                button
-                className={classes.nested}
-                onClick={() => goToChannel(channel.id)}
-              >
-                <ListItemIcon style={{ minWidth: "30px" }}>
-                  <BiHash
-                    className={classes.iconDesign}
-                    style={{ color: "#b9bbbe" }}
-                  />
-                </ListItemIcon>
-                <ListItemText
-                  primary={
-                    channel.channelName === channel.channelName.substr(0, 12)
-                      ? channel.channelName
-                      : `${channel.channelName.substr(0, 12)}...`
-                  }
-                  style={{ color: "#dcddde" }}
-                />
-              </ListItem>
-            ))}
+            {channelList.map((channel) => {
+                  const userData = JSON.parse(localStorage.getItem("userDetails"));
+                  const isOwner = channel.createdBy === userData?.uid;
+
+                  return (
+                    <ListItem key={channel.id} className={classes.nested}>
+                      <ListItemIcon style={{ minWidth: "30px" }}>
+                        <BiHash
+                          className={classes.iconDesign}
+                          style={{ color: "#b9bbbe" }}
+                        />
+                      </ListItemIcon>
+
+                      <ListItemText
+                        primary={
+                          channel.channelName === channel.channelName.substr(0, 12)
+                            ? channel.channelName
+                            : `${channel.channelName.substr(0, 12)}...`
+                        }
+                        style={{ color: "#dcddde", cursor: "pointer" }}
+                        onClick={() => goToChannel(channel.id)}
+                      />
+
+                      {isOwner && (
+                        <IconButton
+                          edge="end"
+                          size="small"
+                          onClick={() => handleDeleteRoom(channel.id)}
+                          style={{
+                            color: "#ff4f4f",
+                            transition: "color 0.2s ease",
+                          }}
+                          onMouseOver={(e) => (e.currentTarget.style.color = "#ff0000")}
+                          onMouseOut={(e) => (e.currentTarget.style.color = "#ff4f4f")}
+                          title="Delete this room"
+                        >
+                          <DeleteOutlineIcon fontSize="small" />
+                        </IconButton>
+                      )}
+                    </ListItem>
+                  );
+                  })}
           </List>
         </Collapse>
       </List>

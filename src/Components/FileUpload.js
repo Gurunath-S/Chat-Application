@@ -36,7 +36,7 @@ function FileUpload({ setState, file }) {
   const [progressBar, setProgressBar] = useState({ display: "none" });
   const [progress, setProgress] = useState(0);
   const [message, setMessage] = useState("");
-  const [preview, setPreview] = useState(URL.createObjectURL(file));
+  const [preview] = useState(URL.createObjectURL(file));
 
   const handleClose = () => {
     setOpen(false);

@@ -7,8 +7,7 @@ import Home from "./Components/Home";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { auth, db } from "./Firebase/Firebase";
 import "./App.css";
-import { ClipLoader } from "react-spinners";
-import { BounceLoader, PulseLoader, BeatLoader } from "react-spinners";
+import { PulseLoader} from "react-spinners";
 
 const useStyles = makeStyles((theme) => ({
   root: {

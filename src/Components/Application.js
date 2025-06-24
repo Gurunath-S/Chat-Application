@@ -147,19 +147,26 @@ function Application({ window, uid }) {
 
   const open = Boolean(anchorEl);
 
-  useEffect(() => {
-    if (uid) {
-      const unsubscribe = db
-        .collection("users")
-        .doc(uid)
-        .onSnapshot((doc) => {
-          setUserDetails(doc.data());
-          localStorage.setItem("userDetails", JSON.stringify(doc.data()));
-        });
+useEffect(() => {
+  if (uid) {
+    console.log("Fetching user details for UID:", uid); // 💥 log here
 
-      return () => unsubscribe();
-    }
-  }, [uid]);
+    const unsubscribe = db
+      .collection("users")
+      .doc(uid)
+      .onSnapshot((doc) => {
+        const data = doc.data();
+        console.log("User details fetched:", data); // 🔍 log fetched data
+        setUserDetails(data);
+        localStorage.setItem("userDetails", JSON.stringify(data));
+      });
+
+    return () => unsubscribe();
+  } else {
+    console.log("UID is null, not fetching user details"); // ⚠️ fallback log
+  }
+}, [uid]);
+
 
   const handleMenu = (e) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
@@ -180,43 +187,55 @@ function Application({ window, uid }) {
       .catch((err) => console.error(err));
   };
 
-  const drawer = userDetails && (
-    <div>
-      <Toolbar className={classes.sideToolBar}>
-        <Typography variant="h6" className={classes.sideToolBarText}>
-          CHATIFY
-        </Typography>
-      </Toolbar>
-      <Divider />
-      <Grid className={classes.avatarGrid}>
-        <div className={classes.avatarIcon}>
-          <StyledBadge
-            overlap="circle"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            variant="dot"
-          >
-            <Avatar
-              alt={userDetails.name}
-              src={userDetails.photoURL}
-              className={classes.purple}
-            />
-          </StyledBadge>
-          <Typography variant="h6" className={classes.avatarDisplayName}>
-            {userDetails.displayName}
+  const drawer = (
+  <div>
+    <Toolbar className={classes.sideToolBar}>
+      <Typography variant="h6" className={classes.sideToolBarText}>
+        CHATIFY
+      </Typography>
+    </Toolbar>
+    <Divider />
+    {userDetails ? (
+      <>
+        <Grid className={classes.avatarGrid}>
+          <div className={classes.avatarIcon}>
+            <StyledBadge
+              overlap="circle"
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              variant="dot"
+            >
+              <Avatar
+                alt={userDetails.name}
+                src={userDetails.photoURL}
+                className={classes.purple}
+              />
+            </StyledBadge>
+            <Typography variant="h6" className={classes.avatarDisplayName}>
+              {userDetails.displayName}
+            </Typography>
+          </div>
+          <Typography className={classes.avatarName}>
+            {userDetails.name}
           </Typography>
-        </div>
-        <Typography className={classes.avatarName}>
-          {userDetails.name}
-        </Typography>
-        <Typography className={classes.avatarName}>
-          {userDetails.email}
-        </Typography>
-      </Grid>
-      <Divider />
-      <Rooms />
-      <Divider />
-    </div>
-  );
+          <Typography className={classes.avatarName}>
+            {userDetails.email}
+          </Typography>
+        </Grid>
+        <Divider />
+        <Rooms />
+        <Divider />
+      </>
+    ) : (
+      <Typography
+        style={{ padding: 20, textAlign: "center", color: "#aaa" }}
+        variant="body2"
+      >
+        Loading user...
+      </Typography>
+    )}
+  </div>
+);
+
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
