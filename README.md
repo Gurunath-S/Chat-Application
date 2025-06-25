@@ -6,6 +6,16 @@ The app is deployed using Vercel:
 
 🔗 https://groupchat-application.vercel.app
 
+### Sign-in Page
+![Screenshot From 2025-06-26 01-33-40](https://github.com/user-attachments/assets/d25255e2-f4dc-466f-8406-f820def22ac4)
+
+### Home Page
+![Screenshot From 2025-06-26 01-34-09](https://github.com/user-attachments/assets/8b04535b-91c5-4990-b442-f68615c074e0)
+
+### Chat Page
+![Screenshot From 2025-06-26 01-34-38](https://github.com/user-attachments/assets/11299252-956e-421b-8e01-013c964fca22)
+
+
 ## 🚀 Features
 
 - 🔥 Firebase Authentication
@@ -17,7 +27,7 @@ The app is deployed using Vercel:
 
 ## 📷 Preview
 
-![App Screenshot](https://your-screenshot-url-if-any)
+
 
 ## 🛠️ Tech Stack
 
