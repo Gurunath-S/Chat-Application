@@ -1,47 +1,72 @@
-<div align="center">
+# 🗨️ Group Chat Application
 
-# ChatApplication
+A real-time group chat application built using **React**, **Firebase**, and **Material-UI**, with support for creating and managing chat rooms.
 
-### Personal Chat Room or Workspace to share resources and hangout with friends.
+The app is deployed using Vercel:
+
+🔗 https://groupchat-application.vercel.app
+
+## 🚀 Features
+
+- 🔥 Firebase Authentication
+- 💬 Create and join group chat rooms
+- 🧑‍💻 Only channel owners can delete rooms
+- ⚡ Real-time message updates using Firestore
+- 🌙 Dark mode support (optional)
+- 🎨 Material UI + Custom styling
+- 📱 Fully responsive design
+
+## 📷 Preview
+
+![App Screenshot](https://your-screenshot-url-if-any)
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React, Material-UI
+- **Backend/Database**: Firebase Firestore
+- **Deployment**: Vercel
 
 
-## Build With
+## 🔐 Firebase Setup
 
-- `React.js`
-- `Firebase`
-- `Material UI`
-- `React Icons`
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Create a new project
+3. Add a web app
+4. Enable **Authentication** (Email/Password or Google)
+5. Create a **Firestore Database**
+6. Copy your config and paste it in `src/Firebase/Firebase.js`
 
-## Features:
+```js
+// Firebase.js
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 
-- Easy SignIn with Google
-- Create Rooms
-- Realtime group messaging with image sharing
-- Supports Emoji
-- Reaction on messages
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "your-app.firebaseapp.com",
+  projectId: "your-app-id",
+  storageBucket: "your-app.appspot.com",
+  messagingSenderId: "your-id",
+  appId: "your-app-id"
+};
 
-## Installation and Usage
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+const db = firebaseApp.firestore();
+const auth = firebase.auth();
 
-### Clone this repository
-
-`https://github.com/Gurunath-S/Chat-Application.git` <br/>
-`cd chatify`
-
-### Install Dependencies
-
-`npm install`
-
-In the project directory, you can run:
-
-### npm start
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### npm run build
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+export { db, auth };
+```
+# Clone the repo
+```
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+```
+# Install dependencies
+```
+npm install
+```
+# Start dev server
+```
+npm start
+```
