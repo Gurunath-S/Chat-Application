@@ -12,7 +12,6 @@ The app is deployed using Vercel:
 - 💬 Create and join group chat rooms
 - 🧑‍💻 Only channel owners can delete rooms
 - ⚡ Real-time message updates using Firestore
-- 🌙 Dark mode support (optional)
 - 🎨 Material UI + Custom styling
 - 📱 Fully responsive design
 
